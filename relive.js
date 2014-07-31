@@ -1,3 +1,4 @@
+// if we have crossdomain access, we can just return url, otherwise we need to use a proxy
 function urlify(url)
 {
   // return url;
@@ -62,6 +63,7 @@ var Relive = {
   {
     this.stations = {};
   },
+  
   loadStations:function( finished )
   {
     var _this = this;
@@ -174,7 +176,7 @@ var Relive = {
     {
       case 1: return "audio/mpeg";
       case 2: return "audio/ogg";
-      case 3: return "audio/aac";
+      case 3: return "audio/aac"; // not supported by html5 afaik?!
       default: return "application/octet-stream";
     }
     return null;
