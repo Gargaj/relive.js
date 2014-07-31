@@ -13,6 +13,7 @@
   pre { font-size: 10px; }
   li { cursor: pointer; }
   li:hover { text-decoration: underline; }  
+  #player { position: fixed; top: 10px; right: 10px; }
   </style>
 </head>
 <body>
@@ -37,6 +38,11 @@ document.observe("dom:loaded",function(){
             li2.setAttribute("data-id",item.value.id);
             li2.observe("click",function(ev2){
               var streamID = ev2.findElement("li").getAttribute("data-id");
+
+              Relive.loadStreamChat( stationID, streamID, function(s){
+                $("debug").update( JSON.stringify(Relive,null,2) );
+              } );
+
               $("player").update("");
               
               var audio = new Element("audio",{id:"stream","controls":"controls"});
@@ -49,12 +55,12 @@ document.observe("dom:loaded",function(){
               
               setTimeout(function(){ audio.play(); },1000);
               
+              $("debug").update( JSON.stringify(Relive,null,2) );
             });
             $("streams").insert( li2 );
           });
         
         });
-        //$("debug").update( JSON.stringify(r.stations,null,2) );
       });
       $("stations").insert( li );
     });

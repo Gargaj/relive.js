@@ -46,11 +46,12 @@ function ReliveBinaryRequest(options)
   xhr.open(options.method ? options.method : "GET", options.url, true);
   xhr.responseType = 'arraybuffer';
   
-  xhr.onload = function(e) {
-    if (this.status == 200) {
+  xhr.onload = function(e) 
+  {
+    if (this.status == 200) 
+    {
       if (options.success)
         options.success(xhr.response);
-      //Do your stuff here
     }
   };
   
@@ -58,6 +59,18 @@ function ReliveBinaryRequest(options)
 }
 
 var Relive = {
+
+  CHATTYPE_UNKNOWN: 0,
+  CHATTYPE_MESSAGE: 1, 
+  CHATTYPE_ME: 2, 
+  CHATTYPE_JOIN: 3, 
+  CHATTYPE_LEAVE: 4, 
+  CHATTYPE_QUIT: 5, 
+  CHATTYPE_NICK: 6, 
+  CHATTYPE_TOPIC: 7, 
+  CHATTYPE_MODE: 8, 
+  CHATTYPE_KICK: 9,
+  
   stations: {},
   initialize:function()
   {
@@ -95,12 +108,12 @@ var Relive = {
       }
     });
   },
-  loadStationInfo:function( id, finished )
+  loadStationInfo:function( stationID, finished )
   {
     var _this = this;
-    if (!_this.stations[id])
+    if (!_this.stations[stationID])
       return;
-    var url = "http://" + _this.stations[id].domain + ":" + _this.stations[id].port + _this.stations[id].path + "getstationinfo/?v=6";
+    var url = "http://" + _this.stations[stationID].domain + ":" + _this.stations[stationID].port + _this.stations[stationID].path + "getstationinfo/?v=6";
     ReliveBinaryRequest({
       url: urlify(url),
       method: "GET",
@@ -113,7 +126,7 @@ var Relive = {
         if ((version < 4) || (version > 6)) 
           return;
           
-        var station = _this.stations[id];
+        var station = _this.stations[stationID];
         station.stationName = stream.string();
         
         if (version >= 5) station.websiteURL = stream.string();
@@ -150,6 +163,66 @@ var Relive = {
       }
     });
   },
+  loadStreamChat:function( stationID, streamID, finished )
+  {
+    var _this = this;
+    var _this = this;
+    if (!_this.stations[stationID])
+      return;
+    if (!_this.stations[stationID].streams[streamID])
+      return;
+    var url = "http://" + _this.stations[stationID].domain + ":" + _this.stations[stationID].port + _this.stations[stationID].path + "getstreamchat/" + 
+      "?streamid=" + _this.stations[stationID].streams[streamID].id;
+    ReliveBinaryRequest({
+      url: urlify(url),
+      method: "GET",
+      success:function( arrayBuffer )
+      {
+        var stream = new ReliveByteStream( arrayBuffer );
+        var size = stream.uint16();
+        var packetID = stream.uint8(); //== 5
+        var version = stream.uint8();
+        if (version < 2) 
+          return;
+        
+        var _stream = _this.stations[stationID].streams[streamID];
+        
+        _stream.channels = [];
+        var channelCount = 1;
+        if (version == 8)
+          channelCount = stream.uint32();
+          
+        for (var i = 0; i < channelCount; i++)
+        {
+          var channel = {};
+          channel.name = "";
+          if( version >= 3 )
+            channel.name = stream.string();
+          
+          var rowCount = stream.uint32();
+          channel.rows = [];
+          
+          for (var j = 0; j < rowCount; j++)
+          {
+            var row = {};
+            var size = stream.uint16();
+            var packetID = stream.uint8(); //== 6
+            row.timestamp = stream.uint32();
+            row.type = stream.uint8();
+            row.stringCount = stream.uint8();
+            row.strings = [];
+            for (var s = 0; s < row.stringCount; s++)
+              row.strings.push( stream.string() );
+            channel.rows.push( row );
+          }
+                   
+          _stream.channels.push( channel );
+        }
+          
+        if (finished) finished( stream.channels );
+      }
+    });
+  },  
   getStreamURL:function( stationID, streamID )
   {
     var _this = this;
