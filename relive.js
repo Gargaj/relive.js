@@ -211,7 +211,7 @@ var Relive = {
           _stream.tracks.push( track );
         }
           
-        if (finished) finished( stream.channels );
+        if (finished) finished( _stream.tracks );
       }
     });
   },  
@@ -272,7 +272,7 @@ var Relive = {
           _stream.channels.push( channel );
         }
           
-        if (finished) finished( stream.channels );
+        if (finished) finished( _stream.channels );
       }
     });
   },  
