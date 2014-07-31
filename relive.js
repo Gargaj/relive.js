@@ -58,7 +58,7 @@ function ReliveBinaryRequest(options)
   xhr.send();
 }
 
-var Relive = {
+var Relive = Relive || {
 
   TRACKTYPE_DEFAULT: 0,
   TRACKTYPE_MUSIC: 1,

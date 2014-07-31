@@ -10,7 +10,8 @@
   <script type="text/javascript" src="./relive.js"></script>
   <style type="text/css">
   #stations { font-size: 20px; }
-  pre { font-size: 10px; }
+  footer,pre { font-size: 10px; }
+  #debug { width: 400px; height: 600px; overflow: scroll; background: #eee; position: fixed; top: 30px; right: 10px; }
   li { cursor: pointer; }
   li:hover { text-decoration: underline; }  
   #player { position: fixed; top: 10px; right: 10px; }
@@ -73,6 +74,8 @@ document.observe("dom:loaded",function(){
 //-->
 </script>
 
+<pre id="debug"></pre>
+
 <ul id="stations"></ul>
 <ul id="streams"></ul>
 
@@ -80,6 +83,9 @@ document.observe("dom:loaded",function(){
   <audio id="stream" controls="controls"></audio>
 </div>
 
-<pre id="debug"></pre>
+<footer>
+  <a href="https://github.com/Gargaj/relive.js">https://github.com/Gargaj/relive.js</a>
+</footer>
+
 </body>
 </html>
