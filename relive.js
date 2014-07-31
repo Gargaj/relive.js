@@ -51,7 +51,7 @@ function ReliveBinaryRequest(options)
     if (this.status == 200) 
     {
       if (options.success)
-        options.success(xhr.response);
+        options.success(this.response);
     }
   };
   
@@ -82,10 +82,6 @@ var Relive = Relive || {
   CHATTYPE_KICK: 9,
   
   stations: {},
-  initialize:function()
-  {
-    this.stations = {};
-  },
   
   loadStations:function( finished )
   {
