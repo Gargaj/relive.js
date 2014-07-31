@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.1.0/prototype.js"></script>
+  <script type="text/javascript" src="./relive.js"></script>
+  <style type="text/css">
+  #stations { font-size: 20px; }
+  pre { font-size: 10px; }
+  li { cursor: pointer; }
+  li:hover { text-decoration: underline; }  
+  </style>
+</head>
+<body>
+
+<script type="text/javascript">
+<!--
+document.observe("dom:loaded",function(){
+  $("stream").hide();
+  Relive.loadStations(function(stations){
+    $("stations").update("");
+    $H(stations).each(function(item){
+      var li = new Element("li");
+      li.update(item.value.name);
+      li.setAttribute("data-id",item.value.id);
+      li.observe("click",function(ev){
+        var stationID = ev.findElement("li").getAttribute("data-id");
+        Relive.loadStationInfo( stationID, function(station){
+          $("streams").update("");
+          $H(station.streams).each(function(item){
+            var li2 = new Element("li");
+            li2.update(item.value.name);
+            li2.setAttribute("data-id",item.value.id);
+            li2.observe("click",function(ev2){
+              var streamID = ev2.findElement("li").getAttribute("data-id");
+              $("player").update("");
+              
+              var audio = new Element("audio",{id:"stream","controls":"controls"});
+              $("player").insert(audio);
+              
+              var src = new Element("source",{id:"source"});
+              src.setAttribute("src" ,Relive.getStreamURL( stationID, streamID ));
+              src.setAttribute("type",Relive.getStreamMimeType( stationID, streamID ));
+              audio.insert( src );
+              
+              setTimeout(function(){ audio.play(); },1000);
+              
+            });
+            $("streams").insert( li2 );
+          });
+        
+        });
+        //$("debug").update( JSON.stringify(r.stations,null,2) );
+      });
+      $("stations").insert( li );
+    });
+  });
+});
+//-->
+</script>
+
+<ul id="stations"></ul>
+<ul id="streams"></ul>
+
+<div id="player">
+  <audio id="stream" controls="controls"></audio>
+</div>
+
+<pre id="debug"></pre>
+</body>
+</html>
