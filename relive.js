@@ -60,6 +60,10 @@ function ReliveBinaryRequest(options)
 
 var Relive = Relive || {
 
+  // if true, it will keep shoving all the data it finds into the Relive singleton
+  // if false, the data will only be accessible through the success callbacks
+  useSingleton: true, 
+  
   TRACKTYPE_DEFAULT: 0,
   TRACKTYPE_MUSIC: 1,
   TRACKTYPE_TALK: 2,
@@ -191,7 +195,7 @@ var Relive = Relive || {
         if (version != 3 && version != 6) 
           return;
         
-        var _stream = _this.stations[stationID].streams[streamID];
+        var _stream = _this.useSingleton ? _this.stations[stationID].streams[streamID] : {};
         
         _stream.tracks = [];
         var trackCount = stream.uint32();
@@ -238,7 +242,7 @@ var Relive = Relive || {
         if (version < 2) 
           return;
         
-        var _stream = _this.stations[stationID].streams[streamID];
+        var _stream = _this.useSingleton ? _this.stations[stationID].streams[streamID] : {};
         
         _stream.channels = [];
         var channelCount = 1;

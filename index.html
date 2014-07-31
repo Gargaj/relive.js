@@ -22,6 +22,7 @@
 <script type="text/javascript">
 <!--
 document.observe("dom:loaded",function(){
+  Relive.useSingleton = false;
   $("stream").hide();
   Relive.loadStations(function(stations){
     $("stations").update("");
@@ -41,11 +42,11 @@ document.observe("dom:loaded",function(){
               var streamID = ev2.findElement("li").getAttribute("data-id");
 
               Relive.loadStreamChat( stationID, streamID, function(s){
-                $("debug").update( JSON.stringify(Relive,null,2) );
+                $("debug").update( JSON.stringify(Relive.useSingleton ? Relive : s,null,2) );
               } );
 
               Relive.loadStreamInfo( stationID, streamID, function(s){
-                $("debug").update( JSON.stringify(Relive,null,2) );
+                $("debug").update( JSON.stringify(Relive.useSingleton ? Relive : s,null,2) );
               } );
 
               $("player").update("");
@@ -60,7 +61,7 @@ document.observe("dom:loaded",function(){
               
               setTimeout(function(){ audio.play(); },1000);
               
-              $("debug").update( JSON.stringify(Relive,null,2) );
+              //$("debug").update( JSON.stringify(Relive,null,2) );
             });
             $("streams").insert( li2 );
           });
