@@ -171,6 +171,8 @@ var Relive = {
       return;
     if (!_this.stations[stationID].streams[streamID])
       return;
+    if (!_this.stations[stationID].streams[streamID].chatAvailable) // assuming this is always correct?
+      return;
     var url = "http://" + _this.stations[stationID].domain + ":" + _this.stations[stationID].port + _this.stations[stationID].path + "getstreamchat/" + 
       "?streamid=" + _this.stations[stationID].streams[streamID].id;
     ReliveBinaryRequest({
