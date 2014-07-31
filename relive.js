@@ -60,6 +60,12 @@ function ReliveBinaryRequest(options)
 
 var Relive = {
 
+  TRACKTYPE_DEFAULT: 0,
+  TRACKTYPE_MUSIC: 1,
+  TRACKTYPE_TALK: 2,
+  TRACKTYPE_JINGLE: 3,
+  TRACKTYPE_NARRATION: 4,
+
   CHATTYPE_UNKNOWN: 0,
   CHATTYPE_MESSAGE: 1, 
   CHATTYPE_ME: 2, 
@@ -163,9 +169,54 @@ var Relive = {
       }
     });
   },
-  loadStreamChat:function( stationID, streamID, finished )
+  loadStreamInfo:function( stationID, streamID, finished )
   {
     var _this = this;
+    var _this = this;
+    if (!_this.stations[stationID])
+      return;
+    if (!_this.stations[stationID].streams[streamID])
+      return;
+    var url = "http://" + _this.stations[stationID].domain + ":" + _this.stations[stationID].port + _this.stations[stationID].path + "getstreaminfo/" + 
+      "?streamid=" + _this.stations[stationID].streams[streamID].id;
+    ReliveBinaryRequest({
+      url: urlify(url),
+      method: "GET",
+      success:function( arrayBuffer )
+      {
+        var stream = new ReliveByteStream( arrayBuffer );
+        var size = stream.uint16();
+        var packetID = stream.uint8(); //== 3
+        var version = stream.uint8();
+        if (version != 3 && version != 6) 
+          return;
+        
+        var _stream = _this.stations[stationID].streams[streamID];
+        
+        _stream.tracks = [];
+        var trackCount = stream.uint32();
+          
+        for (var i = 0; i < trackCount; i++)
+        {
+          var track = {};
+          var size = stream.uint16();
+          var packetID = stream.uint8(); //== 4
+          track.start = stream.uint32();
+          track.id = stream.uint32();
+          track.type = stream.uint8();
+          track.infoAvailable = (stream.uint8() != 0);
+          track.artist = stream.string();
+          track.title = stream.string();
+                   
+          _stream.tracks.push( track );
+        }
+          
+        if (finished) finished( stream.channels );
+      }
+    });
+  },  
+  loadStreamChat:function( stationID, streamID, finished )
+  {
     var _this = this;
     if (!_this.stations[stationID])
       return;

@@ -43,6 +43,10 @@ document.observe("dom:loaded",function(){
                 $("debug").update( JSON.stringify(Relive,null,2) );
               } );
 
+              Relive.loadStreamInfo( stationID, streamID, function(s){
+                $("debug").update( JSON.stringify(Relive,null,2) );
+              } );
+
               $("player").update("");
               
               var audio = new Element("audio",{id:"stream","controls":"controls"});
