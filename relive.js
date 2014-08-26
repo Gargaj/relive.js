@@ -1,10 +1,3 @@
-// if we have crossdomain access, we can just return url, otherwise we need to use a proxy
-function urlify(url)
-{
-  // return url;
-  return "proxy.php?url=" + escape(url);
-}
-
 function ReliveByteStream( arrayBuffer )
 {
   this.stream = new Uint8Array(arrayBuffer);
@@ -87,7 +80,7 @@ var Relive = Relive || {
   {
     var _this = this;
     ReliveBinaryRequest({
-      url: urlify("http://stations.relive.nu/getstations/"),
+      url: "http://stations.relive.nu/getstations/",
       method: "GET",
       success:function( arrayBuffer )
       {
@@ -121,7 +114,7 @@ var Relive = Relive || {
       return;
     var url = "http://" + _this.stations[stationID].domain + ":" + _this.stations[stationID].port + _this.stations[stationID].path + "getstationinfo/?v=6";
     ReliveBinaryRequest({
-      url: urlify(url),
+      url: url,
       method: "GET",
       success:function( arrayBuffer )
       {
@@ -180,7 +173,7 @@ var Relive = Relive || {
     var url = "http://" + _this.stations[stationID].domain + ":" + _this.stations[stationID].port + _this.stations[stationID].path + "getstreaminfo/" + 
       "?streamid=" + _this.stations[stationID].streams[streamID].id;
     ReliveBinaryRequest({
-      url: urlify(url),
+      url: url,
       method: "GET",
       success:function( arrayBuffer )
       {
@@ -227,7 +220,7 @@ var Relive = Relive || {
     var url = "http://" + _this.stations[stationID].domain + ":" + _this.stations[stationID].port + _this.stations[stationID].path + "getstreamchat/" + 
       "?streamid=" + _this.stations[stationID].streams[streamID].id;
     ReliveBinaryRequest({
-      url: urlify(url),
+      url: url,
       method: "GET",
       success:function( arrayBuffer )
       {
