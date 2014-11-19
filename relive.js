@@ -305,7 +305,6 @@ var Relive = Relive || {
   {
     var v = value;
     var s = "";
-    var digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     do {
       s = this.b62digits[ v % 62 ] + s;
       v = Math.floor( v / 62 );
