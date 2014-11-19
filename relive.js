@@ -75,6 +75,7 @@ var Relive = Relive || {
   CHATTYPE_KICK: 9,
   
   stations: {},
+  b62digits: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
   
   loadStations:function( finished )
   {
@@ -299,5 +300,26 @@ var Relive = Relive || {
       default: return "application/octet-stream";
     }
     return null;
+  },
+  toBase62:function( value )
+  {
+    var v = value;
+    var s = "";
+    var digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    do {
+      s = s + this.b62digits[ v % 62 ];
+      v = Math.floor( v / 62 );
+    } while (v > 0);
+    return s;
+  },
+  fromBase62:function( str )
+  {
+    var v = 0;
+    for (var i=0; i<str.length; i++) 
+    {
+      v *= 62;
+      v += this.b62digits.indexOf( str[i] );
+    }
+    return v;
   },
 };
