@@ -90,7 +90,7 @@ var Relive = Relive || {
         var packetID = stream.uint8(); //== 7
         var protocol = stream.uint8(); //== 1
         var stationCount = stream.uint32();
-        console.log("stationCount = " + stationCount);
+        //console.log("stationCount = " + stationCount);
         _this.stations = {};
         for (var i = 0; i < stationCount; i++)
         {
