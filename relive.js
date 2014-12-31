@@ -46,6 +46,11 @@ function ReliveBinaryRequest(options)
       if (options.success)
         options.success(this.response);
     }
+    else if (this.status >= 400 && this.status <= 599)
+    {
+      if (options.error)
+        options.error(this.response, this.status);
+    }
   };
   
   xhr.send();
@@ -77,7 +82,7 @@ var Relive = Relive || {
   stations: {},
   b62digits: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
   
-  loadStations:function( finished )
+  loadStations:function( finished, error )
   {
     var _this = this;
     ReliveBinaryRequest({
@@ -105,10 +110,11 @@ var Relive = Relive || {
           _this.stations[station.id] = station;
         }
         if (finished) finished( _this.stations );
-      }
+      },
+      error: error
     });
   },
-  loadStationInfo:function( stationID, finished )
+  loadStationInfo:function( stationID, finished, error )
   {
     var _this = this;
     if (!_this.stations[stationID])
@@ -160,10 +166,11 @@ var Relive = Relive || {
           station.streams[_stream.id] = _stream;
         }
         if (finished) finished( station );
-      }
+      },
+      error: error
     });
   },
-  loadStreamInfo:function( stationID, streamID, finished )
+  loadStreamInfo:function( stationID, streamID, finished, error )
   {
     var _this = this;
     var _this = this;
@@ -206,10 +213,11 @@ var Relive = Relive || {
         }
           
         if (finished) finished( _stream.tracks );
-      }
+      },
+      error: error
     });
   },  
-  loadStreamChat:function( stationID, streamID, finished )
+  loadStreamChat:function( stationID, streamID, finished, error )
   {
     var _this = this;
     if (!_this.stations[stationID])
@@ -267,7 +275,8 @@ var Relive = Relive || {
         }
           
         if (finished) finished( _stream.channels );
-      }
+      },
+      error: error
     });
   },  
   getStreamURL:function( stationID, streamID )
