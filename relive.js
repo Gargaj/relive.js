@@ -46,8 +46,7 @@ function ReliveBinaryRequest(options)
       if (options.success)
         options.success(this.response);
     }
-    // Offer all 400 and spec-valid 500 errors.
-    else if ((this.status & 400) === 400)
+    else if (this.status >= 400 && this.status <= 599)
     {
       if (options.error)
         options.error(this.response, this.status);
