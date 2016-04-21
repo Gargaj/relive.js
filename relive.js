@@ -305,7 +305,7 @@ var Relive = Relive || {
     {
       case 1: return "audio/mpeg";
       case 2: return "audio/ogg";
-      case 3: return "audio/aac"; // not supported by html5 afaik?!
+      case 3: return "audio/aac";
       default: return "application/octet-stream";
     }
     return null;
